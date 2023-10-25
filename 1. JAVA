@@ -1,48 +1,80 @@
-
-
-
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
-
     public static void main(String[] args) {
-        int[] myArray = {1, 2, 3, 4, 5, 6, 7};
-        Collections.shuffle(Arrays.asList(myArray));
-        System.out.println("Shuffled Array:");
-        for (int i : myArray)
-            System.out.print(i + " ");
+      
+        Integer[] array = {1, 2, 3, 4, 5, 6, 7};
+        Collections.shuffle(Arrays.asList(array));
+        System.out.println("Shuffled array: " + Arrays.toString(array));
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a Roman numeral (e.g., IX): ");
+        String romanNumeral = scanner.nextLine();
+        int integerEquivalent = romanToInteger(romanNumeral);
+        System.out.println("Integer equivalent: " + integerEquivalent);
+
+     
+        System.out.print("Enter a sentence to check for pangram: ");
+        String sentence = scanner.nextLine().toLowerCase();
+        boolean isPangram = isPangram(sentence);
+        if (isPangram) {
+            System.out.println("The sentence is a pangram.");
+        } else {
+            System.out.println("The sentence is not a pangram.");
+        }
+    }
+
+  
+    public static int romanToInteger(String s) {
+        int result = 0;
+        int prevValue = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            char c = s.charAt(i);
+            int value = romanCharToInt(c);
+            if (value < prevValue) {
+                result -= value;
+            } else {
+                result += value;
+            }
+            prevValue = value;
+        }
+        return result;
+    }
+
+    public static int romanCharToInt(char c) {
+        switch (c) {
+            case 'I':
+                return 1;
+            case 'V':
+                return 5;
+            case 'X':
+                return 10;
+            case 'L':
+                return 50;
+            case 'C':
+                return 100;
+            case 'D':
+                return 500;
+            case 'M':
+                return 1000;
+            default:
+                return 0;
+        }
+    }
+
+ 
+    public static boolean isPangram(String sentence) {
+        Set<Character> alphabet = new HashSet<>();
+        for (char c : sentence.toCharArray()) {
+            if (Character.isLetter(c)) {
+                alphabet.add(c);
+            }
+        }
+        return alphabet.size() == 26; // There are 26 letters in the English alphabet.
     }
 }
 
-// B.
-import java.util.Scanner;
-
-public class Main {
-
-    public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Enter a Roman Number: ");
-        String romanNumber = input.next();
-        int decimalNumber = 0;
-        int lastNumber = 0;
-        char[] romanNumeral = romanNumber.toUpperCase().toCharArray();
-
-        // Loop through all characters of input string
-        for (int x = romanNumeral.length - 1; x >= 0; x--) {
-            char convertToDecimal = romanNumeral[x];
-
-            switch (convertToDecimal) {
-                case 'M':
-                    decimalNumber = processDecimal(1000, lastNumber, decimalNumber);
-                    lastNumber = 1000;
-                    break;
-
-                case 'D':
-                    decimalNumber = processDecimal(500, lastNumber, decimalNumber);
-                    lastNumber = 500;
-                    break;
-
-                case 'C':
-                    decimalNumber = processDecimal(100, lastNumber, decimalNumber);
-                   
